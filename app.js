@@ -1,6 +1,6 @@
 const { execSync } = require("child_process");
 
-const target = process.env.TARGET_URL || "https://example.com"; // 目标网站
+const target = process.env.TARGET_URL || "https://junpyomaygem.carrd.co/"; // 目标网站
 console.log(`开始镜像网站: ${target}`);
 
 try {
