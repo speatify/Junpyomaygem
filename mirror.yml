@@ -1,0 +1,24 @@
+name: Mirror Website
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # 每天凌晨 11 点 (北京时间)
+  workflow_dispatch: # 允许手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 安装 wget
+        run: sudo apt install wget -y
+
+      - name: 运行镜像脚本
+        run: TARGET_URL="https://目标网站.com" npm run mirror
+
+      - name: 部署到 GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
