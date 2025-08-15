@@ -15,7 +15,7 @@ jobs:
         run: sudo apt install wget -y
 
       - name: 运行镜像脚本
-        run: TARGET_URL="https://目标网站.com" npm run mirror
+        run: TARGET_URL="https://junpyomaygem.carrd.co/" npm run mirror
 
       - name: 部署到 GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
