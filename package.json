@@ -1,0 +1,10 @@
+{
+  "name": "mirror-site",
+  "version": "1.0.0",
+  "scripts": {
+    "mirror": "node app.js"
+  },
+  "dependencies": {
+    "puppeteer": "^23.0.0"
+  }
+}
