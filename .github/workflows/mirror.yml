@@ -19,13 +19,11 @@ jobs:
         run: |
           rm -rf docs
           wget --mirror --convert-links --adjust-extension --page-requisites --no-parent https://junpyomaygem.carrd.co/ -P docs
-          # 把抓下来的内容移动到 docs 根目录
+          # 把抓下来的内容放到 docs 根目录
           mv docs/junpyomaygem.carrd.co/* docs/ || true
 
-      - name: Commit & Push changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs
-          git commit -m "Update mirror" || echo "No changes to commit"
-          git push
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
