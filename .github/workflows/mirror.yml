@@ -1,23 +1,31 @@
 name: Mirror Website
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "0 3 * * *" # 每天凌晨 11 点 (北京时间)
-  workflow_dispatch: # 允许手动触发
+    - cron: "0 3 * * *"
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-      - name: 安装 wget
-        run: sudo apt install wget -y
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-      - name: 运行镜像脚本
-        run: TARGET_URL="https://junpyomaygem.carrd.co/" npm run mirror
+      - name: Install deps
+        run: npm install
 
-      - name: 部署到 GitHub Pages
+      - name: Run puppeteer
+        run: npm run mirror
+        env:
+          TARGET_URL: "https://junpyomaygem.carrd.co/"
+
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
