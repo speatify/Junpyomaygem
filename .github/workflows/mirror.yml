@@ -1,9 +1,12 @@
 name: Mirror Website
 
 on:
-  workflow_dispatch:   # 手动触发
+  workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *"   # 每天 2:00 UTC (北京时间 10:00)
+    - cron: "0 2 * * *"
+
+permissions:
+  contents: write   # ⬅️ 给 GITHUB_TOKEN 写权限
 
 jobs:
   build:
@@ -19,7 +22,6 @@ jobs:
         run: |
           rm -rf docs
           wget --mirror --convert-links --adjust-extension --page-requisites --no-parent https://junpyomaygem.carrd.co/ -P docs
-          # 把抓下来的内容放到 docs 根目录
           mv docs/junpyomaygem.carrd.co/* docs/ || true
 
       - name: Deploy to GitHub Pages
