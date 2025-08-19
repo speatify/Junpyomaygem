@@ -1,9 +1,9 @@
 name: Mirror Website
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # 手动触发
   schedule:
-    - cron: "0 3 * * *"
+    - cron: "0 2 * * *"   # 每天 2:00 UTC (北京时间 10:00)
 
 jobs:
   build:
@@ -12,21 +12,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      - name: Install wget
+        run: sudo apt-get install -y wget
 
-      - name: Install deps
-        run: npm install
+      - name: Mirror site
+        run: |
+          rm -rf docs
+          wget --mirror --convert-links --adjust-extension --page-requisites --no-parent https://junpyomaygem.carrd.co/ -P docs
+          # 把抓下来的内容移动到 docs 根目录
+          mv docs/junpyomaygem.carrd.co/* docs/ || true
 
-      - name: Run puppeteer
-        run: npm run mirror
-        env:
-          TARGET_URL: "https://junpyomaygem.carrd.co/"
-
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+      - name: Commit & Push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "Update mirror" || echo "No changes to commit"
+          git push
